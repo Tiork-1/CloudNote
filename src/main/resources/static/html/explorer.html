@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>发现</title>
+    <link rel="stylesheet" href="../layui/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../css/explorer.css">
+</head>
+<body>
+<img src="../image/bg6.jpg" id="back-image">
+<!--顶部导航栏-->
+<ul class="layui-nav level-nav">
+    <li class="layui-nav-item">
+        <a href="">编辑</a>
+    </li>
+    <li class="layui-nav-item">
+        <a href="">阅读</a>
+    </li>
+    <li class="layui-nav-item">
+        <a href="">发现</a>
+    </li>
+    <li class="layui-nav-item">
+        <a href=""><img src="../image/headimage.jpg" class="layui-nav-img">我</a>
+        <dl class="layui-nav-child">
+            <dd><a href="javascript:;">修改信息</a></dd>
+            <dd><a href="javascript:;">安全管理</a></dd>
+            <dd><a href="javascript:;">退了</a></dd>
+        </dl>
+    </li>
+</ul>
+<div class="main-area">
+    <div class="options">
+        <form class="layui-form layui-form-pane" action="">
+            <div id="swith">
+                <span class="word">仅显示已收藏</span>
+                <br>
+                <input id="is-star" type="checkbox" name="yyy" lay-skin="switch" lay-text="ON|OFF" checked>
+            </div>
+            <input id="search-input" type="text" name="title" required lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+        </form>
+        <a><i class="layui-icon layui-icon-search myicon" style="font-size: 30px; color: #000000;"></i></a>
+        <a><i class="layui-icon layui-icon-refresh myicon-refresh" style="font-size: 40px; color: #000000;"></i></a>
+        <span id="refresh-word">换一批</span>
+
+    </div>
+    <div class="list">
+        <div class="a-row">
+            <div class="passage-item">
+                <div class="passage-item-left">
+                    <div class="passage-title"><span class="title-word">逆元</span></div>
+                    <div class="sub-content"><span class="sub-content-word">求逆元的方法有很多种.....</span></div>
+                </div>
+                <div class="passage-item-right">
+                    <div class="passage-headimage">
+                        <img class="passage-headimage-img" src="../image/headimage.jpg" alt="">
+                    </div>
+
+                    <div class="passage-info">
+                        &nbsp;&nbsp;&nbsp;
+                        <i class="layui-icon layui-icon-star" style="color: #ffffff;"></i>&nbsp;<span class="number-word">23</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <i class="layui-icon layui-icon-read" style="color: #ffffff;"></i>&nbsp;<span class="number-word">754</span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="passage-item">
+                <div class="passage-item-left">
+                    <div class="passage-title"></div>
+                    <div class="sub-content"></div>
+                </div>
+                <div class="passage-item-right">
+                    <div class="passage-headimage">
+                        <img class="passage-headimage-img" src="../image/headimage.jpg" alt="">
+                    </div>
+
+                    <div class="passage-info">
+                        &nbsp;&nbsp;&nbsp;
+                        <i class="layui-icon layui-icon-star" style="color: #ffffff;"></i>&nbsp;<span class="number-word">23</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <i class="layui-icon layui-icon-read" style="color: #ffffff;"></i>&nbsp;<span class="number-word">754</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="a-row">
+            <div class="passage-item"></div>
+            <div class="passage-item"></div>
+        </div>
+        <div class="a-row">
+            <div class="passage-item"></div>
+            <div class="passage-item"></div>
+        </div>
+        <div class="a-row">
+            <div class="passage-item"></div>
+            <div class="passage-item"></div>
+        </div>
+    </div>
+</div>
+<script th:src="@{../js/common.js}"></script>
+<script  type="text/javascript" th:src="@{../layui/layui/layui.js}"></script>
+</body>
+</html>

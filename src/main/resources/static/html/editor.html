@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>编辑你的笔记</title>
+    <link rel="stylesheet"    th:href="@{../layui/layui/css/layui.css}" media="all">
+    <link rel="stylesheet"    th:href="@{../css/editor.css}">
+    <link rel="stylesheet"    th:href="@{../css/examples/style.css}" />
+    <link rel="stylesheet"    th:href="@{../css/editormd.css}" />
+    <link rel="shortcut icon" href="https://pandao.github.io/editor.md/favicon.ico" type="image/x-icon" />
+</head>
+<body>
+<!--顶部导航栏-->
+<ul class="layui-nav level-nav">
+    <li class="layui-nav-item">
+        <a href="">编辑</a>
+    </li>
+    <li class="layui-nav-item">
+        <a href="">阅读</a>
+    </li>
+    <li class="layui-nav-item">
+        <a href="">发现</a>
+    </li>
+    <li class="layui-nav-item">
+        <a href=""><img th:src="@{../image/headimage.jpg}" class="layui-nav-img">我</a>
+        <dl class="layui-nav-child">
+            <dd><a href="javascript:;">修改信息</a></dd>
+            <dd><a href="javascript:;">安全管理</a></dd>
+            <dd><a href="javascript:;">退了</a></dd>
+        </dl>
+    </li>
+</ul>
+
+<!--主区块-->
+<div class="main-block">
+    <ul class="layui-nav layui-nav-tree" lay-filter="test">
+        <!-- 侧边导航: <ul class="layui-nav layui-nav-tree layui-nav-side"> -->
+        <li class="layui-nav-item"><a href="">新增笔记</a></li>
+        <li class="layui-nav-item">
+            <a href="javascript:;">笔记列表</a>
+            <dl class="layui-nav-child" id="note-list">
+                <dd class="list-item"><a href="">链式前向星的使用</a><a onclick="deleteNote()"><i class="layui-icon layui-icon-delete myicon"></i></a></dd>
+                <dd class="list-item"><a href="">背包九讲</a><a onclick="deleteNote()"><i class="layui-icon layui-icon-delete myicon"></i></a></dd>
+                <dd class="list-item"><a href="">坦克大战UML图设计</a><a onclick="deleteNote()"><i class="layui-icon layui-icon-delete myicon"></i></a></dd>
+            </dl>
+        </li>
+    </ul>
+    <!--笔记显示区域-->
+    <div id="layout" class="note-area">
+        <form class="layui-form layui-form-pane" action="">
+            <select name="tags" lay-verify="" id="tag-list" lay-search>
+                <option value="0">在此处选择你的标签</option>
+            </select>
+        </form>
+        <form name="mdEditorForm">
+            <div id="input-title">
+                <span id="title-word">标题:</span><input type="text" name="title" id="title-input-area" placeholder="请输入标题" >
+                <br>
+            </div>
+            <div id="test-editormd">
+                <textarea style="display:none;" name="context"></textarea>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script th:src="@{../js/common.js}"></script>
+<script th:src="@{../js/examples/jquery.min.js}"></script>
+<script th:src="@{../js/editormd.min.js}"></script>
+<script type="text/javascript">
+    var testEditor;
+    $(function() {
+        testEditor = editormd("test-editormd", {
+            width   : "100%",
+            height  : 640,
+            syncScrolling : "single",
+            path    : "../lib/",
+            imageUpload : true,
+            imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+            imageUploadURL : "/article/image/upload",
+            toolbarIcons : function () {
+                return ["undo","redo","|","bold","del","italic","quote","ucwords","uppercase","lowercase","|","h1","h2","h3","h4","h5","h6","|","list-ul","list-ol","hr","|","link","reference-link","image","code","preformatted-text","code-block","table","datetime","emoji","html-entities","pagebreak","|","goto-line","watch","preview","fullscreen","clear","search","|","help","info", "||", "publish"];
+            },
+
+            toolbarIconTexts: {
+                publish: "<span bgcolor='gray'>发布</span>"
+            },
+            toolbarHandlers : {
+                publish: function (cm, icon, cursor, selection) {
+                    mdEditorForm.method = "post";
+                    mdEditorForm.action = "/publish";//提交至服务器的路径
+                    mdEditorForm.submit();
+                }
+            }
+        });
+
+    });
+</script>
+<script  type="text/javascript" th:src="@{../layui/layui/layui.js}"></script>
+<script type="text/javascript">
+
+    function deleteNote(){
+        layui.use('layer', function(){
+            var layer = layui.layer;
+
+            layer.open({
+                title: '卧槽'
+                ,closeBtn:1
+                ,shade:0.4
+                ,btn: ['确认', '取消']
+                ,btn1:function(){
+                    layer.msg("删除成功")
+                }
+                ,btn2:function(){
+                    layer.msg("取消删除")
+                }
+                ,btnAlign:'c'
+                ,content: '要删除笔记吗'
+            });
+
+        });
+    }
+    function chooseTag(){
+        layui.use('layer', function(){
+            var layer = layui.layer;
+
+            layer.open({
+                title: '选择你的标签(可多选)'
+                ,closeBtn:1
+                ,shade:0.4
+                ,btn: ['确认', '取消']
+                ,btn1:function(){
+                    layer.msg("删除成功")
+                }
+                ,btn2:function(){
+                    layer.msg("取消删除")
+                }
+                ,btnAlign:'c'
+                ,content: '要删除笔记吗'
+            });
+
+        });
+    }
+</script>
+<script th:inline="javascript">
+    let courseAvgs = [[${tags}]];
+    var cent = document.getElementById("tag-list");
+    for (let i = 0; i < courseAvgs.length; i++) {
+        cent.innerHTML += "<option value=\""+courseAvgs[i].id+"\">"+courseAvgs[i].name+"</option></option>";
+    }
+    console.log(courseAvgs);
+    courseAvgs = [[${passages}]];
+    cent = document.getElementById("note-list");
+    for (let i = 0; i < courseAvgs.length; i++) {
+        cent.innerHTML += "<dd class=\"list-item\"><a href=\"\">"+cutString(courseAvgs[i].title,18)+"</a>\n" +
+            "    <a onclick=\"deleteNote()\"><i class=\"layui-icon layui-icon-delete myicon\"></i></a></dd>";
+    }
+    console.log(courseAvgs);
+</script>
+
+</body>
+<!--<dd class="list-item"><a href="">链式前向星的使用</a><a onclick="deleteNote()"><i class="layui-icon layui-icon-delete myicon"></i></a></dd>-->
+<!--<option value="0">在此处选择你的标签</option>-->
+</html>

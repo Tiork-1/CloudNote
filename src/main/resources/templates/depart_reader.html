@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{../layui/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{../css/depart_reader.css}">
+    <script type="text/javascript" th:src="@{../js/jquery.js}"></script>
+</head>
+<body>
+<img th:src="@{../image/bg9.jpg}" id="back-image">
+<div class="main-area">
+    <div class="head-area">
+        <div class="title-area">
+            <span class=" word title-word" id="title-word"></span>
+        </div>
+        <div class="other-area">
+            <div class="head-image">
+                <img class="passage-headimage-img" id="passage-headimage-img" alt="">
+            </div>
+            <div class="author"><span class="word author-word" id="author-name"></span></div>
+            <div class="passage-info">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <i class="layui-icon layui-icon-star-fill" style="color: #333333;"></i>&nbsp;<span id="stars" class="number-word"></span>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <i class="layui-icon layui-icon-read" style="color: #333333;"></i>&nbsp;<span id="readers" class="number-word"></span></spanid>
+            </div>
+        </div>
+
+    </div>
+    <div class="content-area">
+<!--        博客显示位置-->
+        <div id="test-editormd">
+<!--            <textarea id="blog-text" style="display: none"></textarea>-->
+        </div>
+    </div>
+    <div class="tag-area" id="tag-area">
+<!--        <span class="layui-badge layui-bg-orange">二叉树</span>-->
+<!--        <span class="layui-badge layui-bg-orange">递归</span>-->
+<!--        <span class="layui-badge layui-bg-orange">暴力</span>-->
+    </div>
+    <div class="comment-area">
+        <div class="input-area">
+            <form class="layui-form layui-form-pane" action="">
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">评论</label>
+                    <div class="layui-input-block">
+                        <textarea name="content" id="comment-input" placeholder="请输入内容" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-filter="formDemo" id="comment-buttom">立即提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="comments-area" id="comments-area">
+<!--            <div class="comment-item">-->
+<!--                <div class="commentor"><span class="commentor-word">@Tiork:</span></div>-->
+<!--                <div class="comment-content"><span class="comment-content-word">大佬的手法真是妙啊！</span></div>-->
+<!--            </div>-->
+<!--            <div class="comment-item"></div>-->
+<!--            <div class="comment-item"></div>-->
+<!--            <div class="comment-item"></div>-->
+        </div>
+    </div>
+    <div class="spare-area">收藏</div>
+
+</div>
+<div onclick="changeStar()"><span id="star-buttom"></span></div>
+<script th:src="@{../js/common.js}"></script>
+<script th:src="@{../js/examples/jquery.min.js}"></script>
+<script th:src="@{../lib/marked.min.js}"></script>
+<script th:src="@{../lib/prettify.min.js}"></script>
+<script th:src="@{../lib/raphael.min.js}"></script>
+<script th:src="@{../lib/underscore.min.js}"></script>
+<script th:src="@{../lib/sequence-diagram.min.js}"></script>
+<script th:src="@{../lib/flowchart.min.js}"></script>
+<script th:src="@{../lib/jquery.flowchart.min.js}"></script>
+<script th:src="@{../js/editormd.min.js}"></script>
+<script type="text/javascript">
+
+    var testEditor;
+    $(function () {
+        testEditor = editormd.markdownToHTML("test-editormd", {
+            width: "100%",
+            height: 700,
+            path: "../lib/",
+            preview: true,
+            watch: true,
+            editor: false,
+        })
+    })
+
+</script>
+
+<script th:inline="javascript">
+    document.getElementById('comment-buttom').addEventListener("click",submitComment);
+    var stars = [[${stars}]];
+    document.getElementById("stars").innerText += stars;
+
+    var passage = [[${passage}]];
+    document.getElementById("test-editormd").innerHTML += "<textarea id=\"test-editormd-text\" style=\"display:none;\">"+passage.content+"</textarea>";
+    document.getElementById("title-word").innerText += passage.title;
+    document.getElementById("readers").innerText += passage.readers;
+    var tags = [[${tags}]];
+    for (let i = 0; i < tags.length; i++) {
+        document.getElementById('tag-area').innerHTML += "<span class=\"layui-badge layui-bg-orange\">"+tags[i].name+"</span>";
+    //    <span class="layui-badge layui-bg-orange">二叉树</span>
+    }
+
+    var comments = [[${comments}]];
+    console.log(comments);
+    for (let i = 0; i < comments.length; i++) {
+        document.getElementById('comments-area').innerHTML += "            <div class=\"comment-item\">\n" +
+            "                <div class=\"commentor\"><span class=\"commentor-word\">@"+comments[i].username+":</span></div>\n" +
+            "                <div class=\"comment-content\"><span class=\"comment-content-word\">"+comments[i].content+"</span></div>\n" +
+            "            </div>";
+    }
+
+    var user = [[${user}]];
+    document.getElementById("author-name").innerText += user.username;
+    document.getElementById("passage-headimage-img").src = user.avatar;
+
+    var isLike = [[${isLike}]];
+    if (isLike=='yes'){
+        document.getElementById('star-buttom').innerText = '取消收藏';
+    }else {
+        document.getElementById('star-buttom').innerText = '收藏';
+    }
+
+    function changeStar(){
+        let isStar = document.getElementById('star-buttom').innerText;
+        if (isStar=='收藏'){
+            document.getElementById('star-buttom').innerText = '取消收藏';
+
+            let para = {}
+            para['passageId'] = passage.id;
+            para['isLike'] = 'yes';
+            $.ajaxSetup({contentType: "application/json; charset=utf-8"});
+            $.post("/dreader/like", JSON.stringify(para), function (res) {}, 'json');
+
+            layer.msg('收藏成功', {
+                icon: 1,
+                time: 1000 //2秒关闭（如果不配置，默认是3秒）
+            }, function(){
+                //do something
+            });
+        }else {
+            document.getElementById('star-buttom').innerText = '收藏';
+
+            let para = {}
+            para['passageId'] = passage.id;
+            para['isLike'] = 'no';
+            $.ajaxSetup({contentType: "application/json; charset=utf-8"});
+            $.post("/dreader/like", JSON.stringify(para), function (res) {}, 'json');
+
+            layer.msg('取消收藏成功', {
+                icon: 1,
+                time: 1000 //2秒关闭（如果不配置，默认是3秒）
+            }, function(){
+                //do something
+            });
+        }
+    }
+
+    function submitComment(){
+        let commentWord = document.getElementById('comment-input').value;
+        document.getElementById('comment-input').innerText = "";
+
+        let para  = {};
+        para['passageId'] = passage.id;
+        para['content'] = commentWord;
+        $.ajaxSetup({contentType: "application/json; charset=utf-8"});
+        $.post("/dreader/addcomment", JSON.stringify(para), function (res) {}, 'json');
+    }
+
+    // $.ajaxSetup({contentType: "application/json; charset=utf-8"})
+    // $.post("login", JSON.stringify(data), function (res) {
+    //     if (res.flag){
+    //         location.href = 'toChatroom';
+    //     }else {
+    //         alert(JSON.stringify(res));
+    //     }
+    // }, 'json');
+
+    // layer.msg('保存成功', {
+    //     icon: 1,
+    //     time: 1000 //2秒关闭（如果不配置，默认是3秒）
+    // }, function(){
+    //     //do something
+    // });
+
+</script>
+<link rel="stylesheet" th:href="@{../css/examples/style.css}" />
+<link rel="stylesheet" th:href="@{../css/editormd.css}" />
+<link rel="shortcut icon" href="https://pandao.github.io/editor.md/favicon.ico" type="image/x-icon" />
+<script  type="text/javascript" th:src="@{../layui/layui/layui.js}"></script>
+</body>
+</html>

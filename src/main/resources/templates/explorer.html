@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>发现</title>
+    <link rel="stylesheet" th:href="@{../layui/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{../css/explorer.css}">
+    <script type="text/javascript" th:src="@{../js/jquery.js}"></script>
+</head>
+<body>
+<img th:src="@{../image/bg9.jpg}" id="back-image">
+<!--顶部导航栏-->
+<ul class="layui-nav level-nav">
+    <li class="layui-nav-item">
+        <a href="/editor/">编辑</a>
+    </li>
+    <li class="layui-nav-item">
+        <a href="/reader/">阅读</a>
+    </li>
+    <li class="layui-nav-item">
+        <a href="">发现</a>
+    </li>
+    <li class="layui-nav-item">
+        <a href=""><img id="headimage" class="layui-nav-img">我</a>
+        <dl class="layui-nav-child">
+            <dd><a href="javascript:changeAvatar();">修改头像</a></dd>
+            <dd><a href="javascript:;">安全管理</a></dd>
+            <dd><a href="/logout">退了</a></dd>
+        </dl>
+    </li>
+</ul>
+<div class="main-area">
+    <div class="options">
+        <form class="layui-form layui-form-pane" action="">
+<!--            <div id="swith">-->
+<!--                <span class="word">仅显示已收藏</span>-->
+<!--                <br>-->
+<!--                <a onclick="changeState()"><i class="layui-icon layui-icon-star"></i></a>-->
+<!--            </div>-->
+            <input id="search-input" type="text" name="title" required lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+        </form>
+        <a onclick="refreshs(0)"><i class="layui-icon layui-icon-search myicon myicon1" style="font-size: 30px; color: #000000;"></i></a>
+        <span id="myicon1-word">查找全部</span>
+        <a onclick="refreshs(1)"><i class="layui-icon layui-icon-search myicon myicon2" style="font-size: 30px; color: #000000;"></i></a>
+        <span id="myicon2-word">查找收藏</span>
+<!--        <a onclick="refreshs()"><i class="layui-icon layui-icon-refresh myicon-refresh" style="font-size: 40px; color: #000000;"></i></a>-->
+<!--        <span id="refresh-word">换一批</span>-->
+
+    </div>
+    <div class="list">
+        <div class="a-row">
+            <div class="passage-item" id="passage-item-1" onclick="openPassage(1)"></div>
+            <div class="passage-item" id="passage-item-2" onclick="openPassage(2)"></div>
+        </div>
+        <div class="a-row">
+            <div class="passage-item" id="passage-item-3" onclick="openPassage(3)"></div>
+            <div class="passage-item" id="passage-item-4" onclick="openPassage(4)"></div>
+        </div>
+        <div class="a-row">
+            <div class="passage-item" id="passage-item-5" onclick="openPassage(5)"></div>
+            <div class="passage-item" id="passage-item-6" onclick="openPassage(6)"></div>
+        </div>
+        <div class="a-row">
+            <div class="passage-item" id="passage-item-7" onclick="openPassage(7)"></div>
+            <div class="passage-item" id="passage-item-8" onclick="openPassage(8)"></div>
+        </div>
+    </div>
+</div>
+<script>
+    function cutString(str,len){
+        let add = "";
+        if (str.length>len){
+            add = "...";
+        }
+        return str.substring(0,len)+add;
+    }
+    function openPassage(x){
+        x = x-1;
+        //增加一个阅读量
+        let para = {}
+        para['passageId'] = courseAvgs[x].passageId;
+        $.ajaxSetup({contentType: "application/json; charset=utf-8"});
+        $.post("/dreader/addread", JSON.stringify(para), function (res) {}, 'json');
+        //前往地址
+        url = "localhost:8082/dreader/"+courseAvgs[x].passageId;
+        window.open("/dreader/"+courseAvgs[x].passageId);
+    }
+    function refreshs(x){
+        var data = {};
+        if (x==1){
+            data['isStar'] = 'yes';
+        }else {
+            data['isStar'] = 'no';
+        }
+        data['search'] = document.getElementById('search-input').value;
+
+        location.href = '/explorer/search?'+'isStar='+data['isStar']+'&search='+data['search'];
+        // console.log(data);
+        // $.ajaxSetup({contentType: "application/json; charset=utf-8"})
+        // $.post("/explorer/search", JSON.stringify(data), function (res) {
+        //     if (res.ok){
+        //
+        //     }else {
+        //
+        //     }
+        // }, 'json');
+    }
+
+    function changeAvatar(){
+        layer.prompt({title: '解决不了跨域，只能这样了，自己输入url吧', formType: 1}, function(value, index){
+            let para = {}
+            para['url'] = value;
+            $.ajaxSetup({contentType: "application/json; charset=utf-8"});
+            $.post("/editor/setavatar", JSON.stringify(para), function (res) {}, 'json');
+            layer.close(index);
+        });
+    }
+
+
+</script>
+<script th:inline="javascript">
+    var courseAvgs = [[${passages}]];
+    var len = courseAvgs.length;
+    console.log(courseAvgs);
+    console.log(len);
+    var width = document.getElementById("passage-item-7").clientWidth;
+    for (let i = 0; i <len ; i++) {
+        let id = "passage-item-"+(i+1).toString();
+        document.getElementById(id).innerHTML += "                <div class=\"passage-item-left\">\n" +
+            "                    <div class=\"passage-title\"><span class=\"title-word\">"+cutString(courseAvgs[i].title,15) +"</span></div>\n" +
+            "                    <div class=\"sub-content\"><span class=\"sub-content-word\">"+cutString(courseAvgs[i].content,40)+"</span></div>\n" +
+            "                </div>\n" +
+            "                <div class=\"passage-item-right\">\n" +
+            "                    <div class=\"passage-headimage\">\n" +
+            "                        <img class=\"passage-headimage-img\" src=\""+courseAvgs[i].avatar+"\" alt=\"\">\n" +
+            "                    </div>\n" +
+            "\n" +
+            "                    <div class=\"passage-info\">\n" +
+            "                        &nbsp;&nbsp;&nbsp;\n" +
+            "                        <i class=\"layui-icon layui-icon-star\" style=\"color: #ffffff;\"></i>&nbsp;<span class=\"number-word\">"+courseAvgs[i].stars+"</span>\n" +
+            "                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n" +
+            "                        <i class=\"layui-icon layui-icon-read\" style=\"color: #ffffff;\"></i>&nbsp;<span class=\"number-word\">"+courseAvgs[i].readers+"</span>\n" +
+            "                    </div>\n" +
+            "                </div>";
+    }
+
+    let user = [[${user}]];
+    document.getElementById('headimage').src = user.avatar;
+
+</script>
+
+<script th:src="@{../js/common.js}"></script>
+<script  type="text/javascript" th:src="@{../layui/layui/layui.js}"></script>
+</body>
+</html>

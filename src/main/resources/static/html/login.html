@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>欢迎来到狗带云笔记</title>
+    <link rel="stylesheet" th:href="@{../css/index.css}">
+    <script type="text/javascript" th:src="@{../js/jquery.js}"></script>
+</head>
+<body>
+<img th:src="@{../image/bg6.jpg}" id="back-image">
+<div class="content">
+    <div class="login-box">
+        <h1>SIGN IN</h1>
+        <div class="output-frame">
+            <label for="username">账号</label>
+            <input type="text" id="username" autofocus>
+        </div>
+        <div class="output-frame">
+            <label for="password">密码</label>
+            <input type="password" id="password">
+        </div>
+        <div class="output-frame">
+            <label for="password">验证码</label>
+            <input type="text" id="verifycode">
+        </div>
+        <button class="login-btn" onclick="login()">登录/注册</button>
+        <span onclick="getvCode()">
+            <img οnclick="getvCode()" id="verifyimg" style="margin-left: 20px;"/>
+        </span>
+    </div>
+</div>
+<div class="hosts">
+    <div class="host-item">
+        <a href="http://qiuxinhan.top:8082/introduction">
+            <div id="qiuxinhan" class="person-page">
+                <img th:src="@{../image/headimage2.jpg}" id="headimage" alt="">
+                <span id="name">邱新汉</span>
+            </div>
+        </a>
+    </div>
+    <div class="host-item"><a href="http://qiuxinhan.top:8082/introduction"><div id="nignxingze" class="person-page">
+        <img th:src="@{../image/headimage.jpg}" id="headimage2" alt="">
+        <span id="name2">宁星择</span>
+    </div></a></div>
+</div>
+<script th:src="@{../js/common.js}"></script>
+<script type="text/javascript">
+    <!--    生成这个页面的随机数-->
+    //生成n位数字字符串
+    function randomNum(n){
+        var res = "";
+        for(var i=0;i<n;i++){
+            res += Math.floor(Math.random()*10);
+        }
+        return res;
+    }
+    var selfCode = randomNum(10);
+
+    function login() {
+        var data = {};
+        data['username'] = $('#username').val();
+        data['password'] = $('#password').val();
+        data['verifycode'] = $('#verifycode').val();
+        data['selfCode'] = selfCode;
+        $.ajaxSetup({contentType: "application/json; charset=utf-8"})
+        $.post("login", JSON.stringify(data), function (res) {
+            if (res.ok){
+                location.href = 'editor';
+            }else {
+                alert(res.describe);
+            }
+        }, 'json');
+    }
+</script>
+
+<script type="text/javascript">
+    getvCode();
+    /**
+     * 获取验证码
+     * 将验证码写到login.html页面的id = verifyimg 的地方
+     */
+    function getvCode() {
+        // document.getElementById("verifyimg").src = "../image/code.png";
+        document.getElementById("verifyimg").src = timestamp("http://localhost:8082/verifyCode");
+    }
+    //为url添加时间戳
+    function timestamp(url) {
+
+        if (url.indexOf("?") > -1) {
+            url = url + "&selfCode=" + selfCode
+        } else {
+            url = url + "?selfCode=" + selfCode
+        }
+        var getTimestamp = new Date().getTime();
+        url = url + "&timestamp=" + getTimestamp;
+        return url;
+    };
+</script>
+
+</body>
+</html>

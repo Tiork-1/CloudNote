@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>编辑你的笔记</title>
+    <link rel="stylesheet"    th:href="@{../layui/layui/css/layui.css}" media="all">
+    <link rel="stylesheet"    th:href="@{../css/editor.css}">
+    <link rel="stylesheet"    th:href="@{../css/examples/style.css}" />
+    <link rel="stylesheet"    th:href="@{../css/editormd.css}" />
+    <link rel="shortcut icon" href="https://pandao.github.io/editor.md/favicon.ico" type="image/x-icon" />
+</head>
+<body>
+<!--顶部导航栏-->
+<ul class="layui-nav level-nav">
+    <li class="layui-nav-item">
+        <a href="">编辑</a>
+    </li>
+    <li class="layui-nav-item">
+        <a href="/reader/">阅读</a>
+    </li>
+    <li class="layui-nav-item">
+        <a href="/explorer/">发现</a>
+    </li>
+    <li class="layui-nav-item">
+        <a href=""><img id="headimage" class="layui-nav-img">我</a>
+        <dl class="layui-nav-child">
+            <dd><a href="javascript:changeAvatar();">修改头像</a></dd>
+            <dd><a href="javascript:;">安全管理</a></dd>
+            <dd><a href="/logout">退了</a></dd>
+        </dl>
+    </li>
+</ul>
+
+<!--主区块-->
+<div class="main-block">
+    <ul class="layui-nav layui-nav-tree" lay-filter="test">
+        <!-- 侧边导航: <ul class="layui-nav layui-nav-tree layui-nav-side"> -->
+        <li class="layui-nav-item"><a href="">新增笔记</a></li>
+        <li class="layui-nav-item layui-nav-itemed">
+            <a href="javascript:;">笔记列表</a>
+            <dl class="layui-nav-child" id="note-list">
+<!--                <dd class="list-item" id="passage-1"><a onclick="getPassage('passage-1')">链式前向星的使用</a><a onclick="deleteNote('passage-1')"><i class="layui-icon layui-icon-delete myicon"></i></a></dd>-->
+<!--                <dd class="list-item" id="passage-2"><a onclick="getPassage('passage-2')">背包九讲</a><a onclick="deleteNote('passage-2')"><i class="layui-icon layui-icon-delete myicon"></i></a></dd>-->
+<!--                <dd class="list-item" id="passage-3"><a onclick="getPassage('passage-3')">坦克大战UML图设计</a><a onclick="deleteNote('passage-3')"><i class="layui-icon layui-icon-delete myicon"></i></a></dd>-->
+            </dl>
+        </li>
+    </ul>
+    <!--笔记显示区域-->
+    <div id="layout" class="note-area">
+        <form class="layui-form layui-form-pane" action="">
+            <select name="tags" lay-verify="" id="tag-list" lay-search>
+                <option value="0">在此处选择你的标签</option>
+<!--                <option value="tag-option-4">测试标签1</option>-->
+<!--                <option value="tag-option-5">测试标签2</option>-->
+<!--                <option value="tag-option-6">测试标签3</option>-->
+            </select>
+            <button type="button" id="tag-button" class="layui-btn" onclick="addTag()">确认</button>
+        </form>
+        <div class="tag-show" id="tag-show">
+<!--            <span id="tag-1" class="chose-tag layui-badge layui-bg-orange">二叉树<i class="layui-icon layui-icon-delete" onclick="deleteTag('tag-1')"></i></span>-->
+<!--            <span id="tag-2" class="chose-tag layui-badge layui-bg-orange">数论<i class="layui-icon layui-icon-delete" onclick="deleteTag('tag-2')"></i></span>-->
+<!--            <span id="tag-3" class="chose-tag layui-badge layui-bg-orange">递归<i class="layui-icon layui-icon-delete" onclick="deleteTag('tag-3')"></i></span>-->
+        </div>
+        <form name="mdEditorForm" id="mdEditorForm">
+            <div id="input-title">
+                <span id="title-word">标题:</span><input type="text" name="title" id="title-input-area" placeholder="请输入标题" >
+                <br>
+            </div>
+            <div id="test-editormd">
+<!--                <textarea style="display:none;" name="context" id="test-editormd-text"></textarea>-->
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script th:src="@{../js/common.js}"></script>
+<script th:src="@{../js/examples/jquery.min.js}"></script>
+<script th:src="@{../js/editormd.min.js}"></script>
+<script type="text/javascript">
+    var tagList = [];
+    var passageId = "";
+    var testEditor;
+    $(function() {
+        testEditor = editormd("test-editormd", {
+            width   : "100%",
+            height  : 640,
+            syncScrolling : "single",
+            path    : "../lib/",
+            imageUpload : true,
+            imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+            imageUploadURL : "/article/image/upload",
+            toolbarIcons : function () {
+                return ["undo","redo","|","bold","del","italic","quote","ucwords","uppercase","lowercase","|","h1","h2","h3","h4","h5","h6","|","list-ul","list-ol","hr","|","link","reference-link","image","code","preformatted-text","code-block","table","datetime","emoji","html-entities","pagebreak","|","goto-line","watch","preview","fullscreen","clear","search","|","help","info", "||", "publish"];
+            },
+
+            toolbarIconTexts: {
+                publish: "<span bgcolor='deepskyblue'>保存</span>"
+            },
+            toolbarHandlers : {
+                publish: function (cm, icon, cursor, selection) {
+                    var data = {};
+                    data['content'] = $('#test-editormd-text').val();
+                    data['title'] = document.getElementById("title-input-area").value;
+                    data['tags'] = JSON.stringify(tagList);
+                    data['id'] = passageId;
+                    console.log(data);
+
+                    $.ajaxSetup({contentType: "application/json; charset=utf-8"})
+                    $.post("/editor/submit", JSON.stringify(data), function (res) {
+                        if (res.ok){
+                            layer.msg('保存成功', {
+                                icon: 1,
+                                time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                            }, function(){
+                                //do something
+                            });
+                        }else {
+                            layer.msg(res.describe, {
+                                icon: 2,
+                                time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                            }, function(){
+                                //do something
+                            });
+                        }
+                    }, 'json');
+                }
+            }
+        });
+
+    });
+</script>
+<script  type="text/javascript" th:src="@{../layui/layui/layui.js}"></script>
+<script type="text/javascript">
+
+    function deleteNote(x){
+        layui.use('layer', function(){
+            var layer = layui.layer;
+
+            layer.open({
+                title: '卧槽'
+                ,closeBtn:1
+                ,shade:0.4
+                ,btn: ['确认', '取消']
+                ,btn1:function(){
+                    let para = {};
+                    para['id'] = x;
+                    $.ajaxSetup({contentType: "application/json; charset=utf-8"})
+                    $.post("/editor/deletePassage", JSON.stringify(para), function (res) {
+                        if (res.ok){
+                            layer.msg('删除成功', {
+                                icon: 1,
+                                time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                            }, function(){
+                                //do something
+                            });
+                            document.getElementById("passage-"+x).remove();
+                        }else {
+                            layer.msg(res.describe, {
+                                icon: 2,
+                                time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                            }, function(){
+                                //do something
+                            });
+                        }
+                    }, 'json');
+                }
+                ,btn2:function(){
+                    layer.msg("取消删除");
+                }
+                ,btnAlign:'c'
+                ,content: '要删除笔记吗'
+            });
+
+        });
+    }
+    function chooseTag(){
+        layui.use('layer', function(){
+            var layer = layui.layer;
+
+            layer.open({
+                title: '选择你的标签(可多选)'
+                ,closeBtn:1
+                ,shade:0.4
+                ,btn: ['确认', '取消']
+                ,btn1:function(){
+                    layer.msg("删除成功")
+                }
+                ,btn2:function(){
+                    layer.msg("取消删除")
+                }
+                ,btnAlign:'c'
+                ,content: '要删除笔记吗'
+            });
+
+        });
+    }
+</script>
+<script th:inline="javascript">
+    var tagDict = {}
+    //标签
+    let courseAvgs = [[${tags}]];
+    var cent = document.getElementById("tag-list");
+    for (let i = 0; i < courseAvgs.length; i++) {
+        //<option value="tag-option-4">测试标签1</option>
+        tagDict[courseAvgs[i].id] = courseAvgs[i].name;
+        cent.innerHTML += "<option value=\"tag-option-"+courseAvgs[i].id+"\">"+courseAvgs[i].name+"</option>";
+    }
+    //文章列表
+    courseAvgs = [[${passages}]];
+    cent = document.getElementById("note-list");
+    for (let i = 0; i < courseAvgs.length; i++) {
+        cent.innerHTML += "<dd class=\"list-item\" id=\"passage-"+courseAvgs[i].id+"\"><a onclick=\"getPassage('"+courseAvgs[i].id+"')\">"+courseAvgs[i].title+"</a><a onclick=\"deleteNote('"+courseAvgs[i].id+"')\"><i class=\"layui-icon layui-icon-delete myicon\"></i></a></dd>";
+    }
+    //显示的文章
+    courseAvgs = [[${passage}]];
+    cent = document.getElementById("test-editormd");
+    passageId = courseAvgs.id;
+    cent.innerHTML += " <textarea id=\"test-editormd-text\" style=\"display:none;\">"+courseAvgs.content+"</textarea>";
+    document.getElementById('title-input-area').value = courseAvgs.title;
+    //显示文章的标签
+    courseAvgs = [[${passageTags}]];
+    cent = document.getElementById("tag-list");
+    var usedTag = {};
+    for (let i = 0; i < courseAvgs.length; i++) {
+        let id = "tag-"+courseAvgs[i].tagId;
+        let text = tagDict[courseAvgs[i].tagId];
+        if (usedTag[id]!=1){
+            tagList.push(id.substring(4));
+            document.getElementById('tag-show').innerHTML+="<span id=\""+id+"\" class=\"chose-tag layui-badge layui-bg-orange\">"+text+"<i class=\"layui-icon layui-icon-delete\" onclick=\"deleteTag('"+id+"')\"></i></span>";
+        }
+        usedTag[id] = 1;
+    }
+
+    let user = [[${user}]];
+    document.getElementById('headimage').src = user.avatar;
+</script>
+<script>
+    function addTag(){
+        let mySelect = document.getElementById('tag-list');
+        let index = mySelect.selectedIndex;
+        let value = mySelect[index].value;
+        let text = mySelect[index].text;
+        let id = "tag-"+value.substring(11);
+        if (document.getElementById(id)){
+            alert("标签已存在");
+        }else {
+            tagList.push(id.substring(4));
+            document.getElementById('tag-show').innerHTML+="<span id=\""+id+"\" class=\"chose-tag layui-badge layui-bg-orange\">"+text+"<i class=\"layui-icon layui-icon-delete\" onclick=\"deleteTag('"+id+"')\"></i></span>";
+        }
+    }
+
+    Array.prototype.remove = function(val) {
+        var index = this.indexOf(val);
+        if (index > -1) {
+            this.splice(index, 1);
+        }
+    };
+
+    function deleteTag(x){
+        document.getElementById(x).remove();
+        tagList.remove(x.substring(4));
+    }
+
+    function getPassage(x){
+        location.href = x;
+    }
+
+    function changeAvatar(){
+        layer.prompt({title: '解决不了跨域，只能这样了，自己输入url吧', formType: 1}, function(value, index){
+            let para = {}
+            para['url'] = value;
+            $.ajaxSetup({contentType: "application/json; charset=utf-8"});
+            $.post("/editor/setavatar", JSON.stringify(para), function (res) {}, 'json');
+            layer.close(index);
+        });
+    }
+
+</script>
+</body>
+<!--<dd class="list-item"><a href="">链式前向星的使用</a><a onclick="deleteNote()"><i class="layui-icon layui-icon-delete myicon"></i></a></dd>-->
+<!--<option value="0">在此处选择你的标签</option>-->
+</html>

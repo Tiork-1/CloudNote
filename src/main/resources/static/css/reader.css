@@ -1,0 +1,81 @@
+body {
+    overflow: hidden;
+}
+
+.main-block{
+    display: flex;
+}
+
+.layui-nav-tree{
+    position: absolute;
+    height: 100%;
+    width: 20%;
+}
+
+.note-area{
+    position: absolute;
+    height: 100%;
+    left: 20%;
+    width: 80%;
+    /*background-color: #ffffff;*/
+    overflow: scroll;
+
+}
+
+#title-input-area{
+    height: 30px;
+    width: 90%;
+    border: 2px solid #eeeeee;
+}
+#input-title{
+
+}
+#title-word{
+    margin: 20px;
+    color: #666666;
+    font-weight: bolder;
+}
+#test-editormd{
+    width: 97%;
+    background-color: rgba(255,255,255,0.7);
+    margin-left: 0px;
+}
+
+#context-area{
+    width: 90%;
+    margin-left: 6%;
+    /*background-color: rgba(0,255,0,0.5);*/
+}
+.passage-info{
+    top: 80px;
+    left: 7%;
+    position: absolute;
+    display: flex;
+}
+#title-area{
+    position: absolute;
+    margin-left: 1%;
+    top: -2%;
+}
+.passage-info-item{
+    margin-right: 10px;
+}
+#blog-area{
+    position: absolute;
+    top: 100px;
+}
+#blog-title-word{
+    margin-top: 30px;
+    font-weight: bolder;
+    font-size: 30px;
+}
+.title-and-info{
+    background-color: rgba(0,0,0,0.1);
+    width: 90%;
+    height: 100px;
+    margin-left: 6%;
+}
+#spare-block{
+    position: relative;
+    height: 150px;
+}

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>阅读器</title>
+    <link rel="stylesheet" th:href="@{../layui/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{../css/reader.css}">
+</head>
+<body>
+<!--顶部导航栏-->
+<img th:src="@{../image/bg9.jpg}" style="position: absolute;width: 100%;height: 100%;" id="back-image">
+<ul class="layui-nav level-nav">
+    <li class="layui-nav-item">
+        <a href="/editor/">编辑</a>
+    </li>
+    <li class="layui-nav-item">
+        <a href="">阅读</a>
+    </li>
+    <li class="layui-nav-item">
+        <a href="/explorer/">发现</a>
+    </li>
+    <li class="layui-nav-item">
+        <a href=""><img id="headimage" class="layui-nav-img">我</a>
+        <dl class="layui-nav-child">
+            <dd><a href="javascript:changeAvatar();">修改头像</a></dd>
+            <dd><a href="javascript:;">安全管理</a></dd>
+            <dd><a href="javascript:;">退了</a></dd>
+        </dl>
+    </li>
+</ul>
+
+<!--主区块-->
+<div class="main-block">
+    <ul class="layui-nav layui-nav-tree" lay-filter="test">
+        <!-- 侧边导航: <ul class="layui-nav layui-nav-tree layui-nav-side"> -->
+        <li class="layui-nav-item layui-nav-itemed">
+            <a href="javascript:;">笔记列表</a>
+            <dl class="layui-nav-child" id="note-list">
+<!--                <dd><a href="">链式前向星的使用</a></dd>-->
+<!--                <dd><a href="">背包九讲</a></dd>-->
+<!--                <dd><a href="">坦克大战UML图设计</a></dd>-->
+            </dl>
+        </li>
+    </ul>
+    <!--笔记显示区域-->
+    <div id="blog-area" class="note-area">
+        <div class="title-and-info">
+            <div id="title-area"><p id="blog-title-word"></p></div>
+            <div class="passage-info">
+                <div class="passage-info-item"><i class="layui-icon layui-icon-star"></i><span id="stars" class="passage-info-word"> </span></div>
+                <div class="passage-info-item"><i class="layui-icon layui-icon-read"></i><span id="readers" class="passage-info-word"> </span></div>
+<!--                <div class="passage-info-item"><i class="layui-icon layui-icon-time"></i><span id="last" class="passage-info-word"> </span></div>-->
+            </div>
+        </div>
+
+        <div id="context-area">
+            <div id="test-editormd">
+<!--                <textarea id="blog-text" style="display: none"></textarea>-->
+            </div>
+        </div>
+        <div id="spare-block"></div>
+    </div>
+</div>
+<script th:src="@{../js/common.js}"></script>
+<script th:src="@{../js/examples/jquery.min.js}"></script>
+<script th:src="@{../lib/marked.min.js}"></script>
+<script th:src="@{../lib/prettify.min.js}"></script>
+<script th:src="@{../lib/raphael.min.js}"></script>
+<script th:src="@{../lib/underscore.min.js}"></script>
+<script th:src="@{../lib/sequence-diagram.min.js}"></script>
+<script th:src="@{../lib/flowchart.min.js}"></script>
+<script th:src="@{../lib/jquery.flowchart.min.js}"></script>
+<script th:src="@{../js/editormd.min.js}"></script>
+<script type="text/javascript" th:src="@{../js/jquery.js}"></script>
+<script type="text/javascript">
+
+    var testEditor;
+
+    $(function () {
+        testEditor = editormd.markdownToHTML("test-editormd", {
+            width: "90%",
+            height: 700,
+            path: "../lib/",
+            preview: true,
+            watch: true,
+            editor: false,
+        })
+    })
+</script>
+
+<script th:inline="javascript">
+    //文章列表
+    courseAvgs = [[${passages}]];
+    cent = document.getElementById("note-list");
+    for (let i = 0; i < courseAvgs.length; i++) {
+        cent.innerHTML += "<dd class=\"list-item\" id=\"passage-"+courseAvgs[i].id+"\"><a onclick=\"getPassage('"+courseAvgs[i].id+"')\">"+courseAvgs[i].title+"</a></dd>";
+    }
+    //显示的文章
+    courseAvgs = [[${passage}]];
+    cent = document.getElementById("test-editormd");
+    cent.innerHTML += " <textarea id=\"test-editormd-text\" style=\"display:none;\">"+courseAvgs.content+"</textarea>";
+    document.getElementById('blog-title-word').innerText = courseAvgs.title;
+    document.getElementById('readers').innerText = ' '+courseAvgs.readers.toString();
+
+    let starNum = [[${stars}]];
+    console.log(starNum);
+    document.getElementById('stars').innerText = ' '+starNum;
+
+    let user = [[${user}]];
+    console.log(user.avatar);
+    console.log("....");
+    document.getElementById('headimage').src = user.avatar;
+</script>
+
+<script>
+    function getPassage(x){
+        location.href = x;
+    }
+
+    function changeAvatar(){
+        layer.prompt({title: '解决不了跨域，只能这样了，自己输入url吧', formType: 1}, function(value, index){
+            let para = {}
+            para['url'] = value;
+            $.ajaxSetup({contentType: "application/json; charset=utf-8"});
+            $.post("/editor/setavatar", JSON.stringify(para), function (res) {}, 'json');
+            layer.close(index);
+        });
+    }
+</script>
+<link rel="stylesheet" th:href="@{../css/examples/style.css}" />
+<link rel="stylesheet" th:href="@{../css/editormd.css}" />
+<link rel="shortcut icon" href="https://pandao.github.io/editor.md/favicon.ico" type="image/x-icon" />
+
+<script  type="text/javascript" th:src="@{../layui/layui/layui.js}"></script>
+</body>
+</html>
+
