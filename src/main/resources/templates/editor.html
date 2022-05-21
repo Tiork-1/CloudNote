@@ -8,6 +8,7 @@
     <link rel="stylesheet"    th:href="@{../css/examples/style.css}" />
     <link rel="stylesheet"    th:href="@{../css/editormd.css}" />
     <link rel="shortcut icon" href="https://pandao.github.io/editor.md/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" th:href="@{../image/siteicon.jpg}">
 </head>
 <body>
 <!--顶部导航栏-->
@@ -35,7 +36,7 @@
 <div class="main-block">
     <ul class="layui-nav layui-nav-tree" lay-filter="test">
         <!-- 侧边导航: <ul class="layui-nav layui-nav-tree layui-nav-side"> -->
-        <li class="layui-nav-item"><a href="">新增笔记</a></li>
+        <li class="layui-nav-item"><a href="/editor/">新增笔记</a></li>
         <li class="layui-nav-item layui-nav-itemed">
             <a href="javascript:;">笔记列表</a>
             <dl class="layui-nav-child" id="note-list">
@@ -210,7 +211,7 @@
     courseAvgs = [[${passages}]];
     cent = document.getElementById("note-list");
     for (let i = 0; i < courseAvgs.length; i++) {
-        cent.innerHTML += "<dd class=\"list-item\" id=\"passage-"+courseAvgs[i].id+"\"><a onclick=\"getPassage('"+courseAvgs[i].id+"')\">"+courseAvgs[i].title+"</a><a onclick=\"deleteNote('"+courseAvgs[i].id+"')\"><i class=\"layui-icon layui-icon-delete myicon\"></i></a></dd>";
+        cent.innerHTML += "<dd class=\"list-item\" id=\"passage-"+courseAvgs[i].id+"\"><a onclick=\"getPassage('"+courseAvgs[i].id+"')\"><span class=\"note-list-title-word\">"+cutString(courseAvgs[i].title,15)+"</span></a><a onclick=\"deleteNote('"+courseAvgs[i].id+"')\"><i class=\"layui-icon layui-icon-delete myicon\"></i></a></dd>";
     }
     //显示的文章
     courseAvgs = [[${passage}]];
@@ -236,6 +237,14 @@
     document.getElementById('headimage').src = user.avatar;
 </script>
 <script>
+    function cutString(str,len){
+        let add = "";
+        if (str.length>len){
+            add = "...";
+        }
+        return str.substring(0,len)+add;
+    }
+
     function addTag(){
         let mySelect = document.getElementById('tag-list');
         let index = mySelect.selectedIndex;

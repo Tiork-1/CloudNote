@@ -2,9 +2,10 @@
 <html  xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title id="title">Title</title>
     <link rel="stylesheet" th:href="@{../layui/layui/css/layui.css}" media="all">
     <link rel="stylesheet" th:href="@{../css/depart_reader.css}">
+    <link rel="shortcut icon" th:href="@{../image/siteicon.jpg}">
     <script type="text/javascript" th:src="@{../js/jquery.js}"></script>
 </head>
 <body>
@@ -105,6 +106,7 @@
     var passage = [[${passage}]];
     document.getElementById("test-editormd").innerHTML += "<textarea id=\"test-editormd-text\" style=\"display:none;\">"+passage.content+"</textarea>";
     document.getElementById("title-word").innerText += passage.title;
+    document.getElementById('title').innerText = passage.title;
     document.getElementById("readers").innerText += passage.readers;
     var tags = [[${tags}]];
     for (let i = 0; i < tags.length; i++) {

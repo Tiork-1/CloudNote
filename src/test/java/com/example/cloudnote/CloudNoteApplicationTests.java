@@ -50,7 +50,46 @@ class CloudNoteApplicationTests {
         System.out.println(tagService.addTag("新闻"));
         System.out.println(tagService.addTag("音乐"));
         System.out.println(tagService.addTag("游戏"));
-        System.out.println(tagService.addTag("LOL"));
+        System.out.println(tagService.addTag("JAVA"));
+        System.out.println(tagService.addTag("Python"));
+        System.out.println(tagService.addTag("C++"));
+        System.out.println(tagService.addTag("C"));
+        System.out.println(tagService.addTag("Golang"));
+        System.out.println(tagService.addTag("Go"));
+        System.out.println(tagService.addTag("C#"));
+        System.out.println(tagService.addTag("html"));
+        System.out.println(tagService.addTag("javascript"));
+        System.out.println(tagService.addTag("vue"));
+        System.out.println(tagService.addTag("three.js"));
+        System.out.println(tagService.addTag("计算机图形学"));
+        System.out.println(tagService.addTag("node.js"));
+        System.out.println(tagService.addTag("js"));
+        System.out.println(tagService.addTag("php"));
+        System.out.println(tagService.addTag("unity"));
+        System.out.println(tagService.addTag("虚幻引擎"));
+        System.out.println(tagService.addTag("数学"));
+        System.out.println(tagService.addTag("论文"));
+        System.out.println(tagService.addTag("springboot"));
+        System.out.println(tagService.addTag("spring"));
+        System.out.println(tagService.addTag("mybatis"));
+        System.out.println(tagService.addTag("mybatis-plus"));
+        System.out.println(tagService.addTag("mysql"));
+        System.out.println(tagService.addTag("sqlserver"));
+        System.out.println(tagService.addTag("innodb"));
+        System.out.println(tagService.addTag("nosql"));
+        System.out.println(tagService.addTag("mangodb"));
+        System.out.println(tagService.addTag("k8s"));
+        System.out.println(tagService.addTag("hadoop"));
+        System.out.println(tagService.addTag("hive"));
+        System.out.println(tagService.addTag("算法"));
+        System.out.println(tagService.addTag("AI"));
+        System.out.println(tagService.addTag("深度学习"));
+        System.out.println(tagService.addTag("强化学习"));
+        System.out.println(tagService.addTag("vgg"));
+        System.out.println(tagService.addTag("神经网络"));
+        System.out.println(tagService.addTag("AlexNet"));
+        System.out.println(tagService.addTag("LeNet"));
+        System.out.println(tagService.addTag("卷积神经网络"));
     }
 
     @Test

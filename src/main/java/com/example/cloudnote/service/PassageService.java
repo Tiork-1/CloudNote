@@ -34,6 +34,10 @@ public class PassageService {
 
     public boolean deletePassage(String id){
         passageMapper.deleteById(id);
+//        删除收藏表的内容
+        QueryWrapper<Like> wrapper = new QueryWrapper<>();
+        wrapper.eq("passage_id",id);
+        likeMapper.delete(wrapper);
         return true;
     }
 

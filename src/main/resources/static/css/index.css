@@ -11,20 +11,20 @@ body{
     width: 100vw;
     height: 100vh;
     /*background-color: antiquewhite;*/
-    left: 60%;
+    /*left: 50%;*/
     top: 20%;
     display: flex;
-    /*justify-content: center;*/
+    justify-content: center;
     align-items: center;
     overflow: hidden;
 }
 .hosts{
     position: fixed;
     display: flex;
-    left: 60%;
-    top: 80%;
+    left: 32%;
+    top: 85%;
     /*background-color: #00F7DE;*/
-    width: 26.3%;
+    width: 36.3%;
     height: 10%;
 }
 .host-item{
@@ -41,6 +41,7 @@ body{
 #qiuxinhan{
     left: 3%;
     border-radius: 100px;
+    box-shadow:0px 0px 15px rgba(100,100,100,1);
 }
 #headimage{
     position: absolute;
@@ -51,6 +52,7 @@ body{
     color: white;
     font-weight: bolder;
     position: absolute;
+    font-size: 1vw;
     left: 55%;
     top: 30%;
 }
@@ -64,11 +66,31 @@ body{
     font-weight: bolder;
     position: absolute;
     left: 55%;
+    font-size: 1vw;
     top: 30%;
 }
 
 #nignxingze{
     left: 13%;
+    border-radius: 100px;
+    box-shadow:0px 0px 15px rgba(100,100,100,1);
+}
+#xiexiaolong{
+    left: 13%;
+    border-radius: 200px;
+    box-shadow:0px 0px 15px rgba(100,100,100,1);
+}
+#name3{
+    color: white;
+    font-weight: bolder;
+    position: absolute;
+    left: 55%;
+    font-size: 1vw;
+    top: 30%;
+}
+#headimage3{
+    position: absolute;
+    height: 100%;
     border-radius: 100px;
 }
 #back-image{
@@ -175,5 +197,3 @@ body{
     width: 80px;
     border-radius: 15px;
 }
-
-
